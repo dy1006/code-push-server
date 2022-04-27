@@ -517,7 +517,7 @@ common.uploadFileToOSS = function (key, filePath) {
     accessKeySecret: _.get(config, "oss.secretAccessKey"),
     // 填写Bucket名称，例如examplebucket。
     bucket: _.get(config, "oss.bucketName"),
-    timeout: 1800 * 1000, // 30min
+    timeout: 60000, // 30min
   };
   const client = new OSS(cfg);
 
