@@ -532,23 +532,8 @@ common.uploadFileToOSS = function (key, filePath) {
   // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
   let result = client.putStream(key, stream, { size });
   console.log("config ->", cfg);
-  console.log("params ->", key, filePath);
+  console.log("params ->", key, filePath, size);
   return result;
-  console.log("==>", result);
-  // var startTime = new Date();
-  return new Promise((resolve, reject) => {
-    result.on("error", (error) => {
-      log.debug("uploadFileToOSS", error);
-      reject(error);
-    });
-    upload.on("uploaded", (details) => {
-      log.debug("uploadFileToOSS", details);
-      var s = (new Date() - startTime) / 1000;
-      console.log("Completed upload in %d seconds", s);
-      resolve(details.ETag);
-    });
-  });
-
   // // 不使用'chunked encoding'。如果在options指定了contentLength参数，则不会使用chunked encoding。
   // let stream = fs.createReadStream('D:\\localpath\\examplefile.txt');
   // let size = fs.statSync('D:\\localpath\\examplefile.txt').size;
