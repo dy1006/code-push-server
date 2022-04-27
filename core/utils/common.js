@@ -509,7 +509,7 @@ common.uploadFileToS3 = function (key, filePath) {
 common.uploadFileToOSS = function (key, filePath) {
   const OSS = require("ali-oss");
   const fs = require("fs");
-  const client = new OSS({
+  const cfg = {
     // yourRegion填写Bucket所在地域。以华东1（杭州）为例，Region填写为oss-cn-hangzhou。
     region: _.get(config, "oss.region"),
     // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
@@ -518,7 +518,8 @@ common.uploadFileToOSS = function (key, filePath) {
     // 填写Bucket名称，例如examplebucket。
     bucket: _.get(config, "oss.bucketName"),
     timeout: 1800 * 1000, // 30min
-  });
+  };
+  const client = new OSS(cfg);
 
   if (!_.isEmpty(_.get(config, "oss.prefix", ""))) {
     key = `${_.get(config, "oss.prefix")}/${key}`;
@@ -529,6 +530,8 @@ common.uploadFileToOSS = function (key, filePath) {
   let stream = fs.createReadStream(filePath);
   // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
   let result = client.putStream(key, stream);
+  console.log("config ->", cfg);
+  console.log("params ->", key, filePath);
   return result;
   console.log("==>", result);
   // var startTime = new Date();
