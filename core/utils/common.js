@@ -529,8 +529,9 @@ common.uploadFileToOSS = function (key, filePath) {
   let stream = fs.createReadStream(filePath);
   // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
   let result = client.putStream(key, stream);
+  return result;
   console.log("==>", result);
-  var startTime = new Date();
+  // var startTime = new Date();
   return new Promise((resolve, reject) => {
     result.on("error", (error) => {
       log.debug("uploadFileToOSS", error);
