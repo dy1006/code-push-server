@@ -517,7 +517,7 @@ common.uploadFileToOSS = function (key, filePath) {
     accessKeySecret: _.get(config, "oss.secretAccessKey"),
     // 填写Bucket名称，例如examplebucket。
     bucket: _.get(config, "oss.bucketName"),
-    timeout: 60000, // 30min
+    timeout: 60000 * 30, // 30min
   };
   const client = new OSS(cfg);
 
@@ -528,8 +528,9 @@ common.uploadFileToOSS = function (key, filePath) {
   // 填写本地文件的完整路径，从本地文件中读取数据流。
   // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
   let stream = fs.createReadStream(filePath);
+  let size = fs.statSync(filePath).size;
   // 填写Object完整路径，例如exampledir/exampleobject.txt。Object完整路径中不能包含Bucket名称。
-  let result = client.putStream(key, stream);
+  let result = client.putStream(key, stream, { size });
   console.log("config ->", cfg);
   console.log("params ->", key, filePath);
   return result;
