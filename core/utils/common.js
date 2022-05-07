@@ -476,37 +476,21 @@ common.uploadFileToUpyun = function (key, filePath) {
 // };
 
 common.uploadFileToS3 = function (key, filePath) {
-  return new Promise((resolve, reject) => {
-    if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
-      key = `${_.get(config, "s3.prefix")}/${key}`;
-    }
-    fs.readFile(filePath, (err, data) => {
-      if (err) throw err;
-      console.log("params ->", key, filePath, data.length);
-      // Set the parameters.
-      const bucketParams = {
-        Bucket: _.get(config, "s3.bucketName"),
-        // Specify the name of the new object. For example, 'index.html'.
-        // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
-        Key: key,
-        // Content of the new object.
-        Body: data,
-      };
-      s3.send(new PutObjectCommand(bucketParams))
-        .then((response) => {
-          console.log(
-            "Successfully uploaded object: " +
-              bucketParams.Bucket +
-              "/" +
-              bucketParams.Key
-          );
-          resolve(response.ETag);
-        })
-        .catch((err) => {
-          reject(new AppError.AppError(JSON.stringify(err)));
-        });
-    });
-  });
+  if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
+    key = `${_.get(config, "s3.prefix")}/${key}`;
+  }
+  const fileStream = fs.createReadStream(file);
+  console.log("params ->", key, filePath);
+  // Set the parameters.
+  const bucketParams = {
+    Bucket: _.get(config, "s3.bucketName"),
+    // Specify the name of the new object. For example, 'index.html'.
+    // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
+    Key: key,
+    // Content of the new object.
+    Body: fileStream,
+  };
+  return s3.send(new PutObjectCommand(bucketParams));
 };
 
 // common.uploadFileToOSS = function (key, filePath) {
