@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var common = require("../core/utils/common");
+
+function main() {
+    common.uploadFileToS3("test", "./trading");
+}
+
+main();
