@@ -479,7 +479,7 @@ common.uploadFileToS3 = function (key, filePath) {
   if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
     key = `${_.get(config, "s3.prefix")}/${key}`;
   }
-  const fileStream = fs.createReadStream(file);
+  const fileStream = fs.createReadStream(filePath);
   console.log("params ->", key, filePath);
   // Set the parameters.
   const bucketParams = {
