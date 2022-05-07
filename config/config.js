@@ -34,6 +34,7 @@ config.development = {
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     sessionToken: process.env.AWS_SESSION_TOKEN, //(optional)
     bucketName: process.env.BUCKET_NAME,
+    prefix: "",
     region: process.env.REGION,
     downloadUrl: process.env.DOWNLOAD_URL, // binary files download host address.
   },
