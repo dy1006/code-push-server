@@ -451,7 +451,11 @@ common.uploadFileToS3 = function (key, filePath) {
     var s3 = new AWS.S3({
       params: { Bucket: _.get(config, "s3.bucketName") },
     });
+    if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
+      key = `${_.get(config, "s3.prefix")}/${key}`;
+    }
     fs.readFile(filePath, (err, data) => {
+      console.log("params ->", key, filePath, data.length);
       s3.upload(
         {
           Key: key,
