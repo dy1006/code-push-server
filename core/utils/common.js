@@ -13,11 +13,9 @@ var AppError = require("../app-error");
 var jschardet = require("jschardet");
 var log4js = require("log4js");
 var path = require("path");
-const { resolve } = require("path");
-const { reject } = require("bluebird");
 var log = log4js.getLogger("cps:utils:common");
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { s3Client } from "./s3Client.js";
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const { s3 } = require("./s3Client.js");
 
 module.exports = common;
 
@@ -478,28 +476,36 @@ common.uploadFileToUpyun = function (key, filePath) {
 // };
 
 common.uploadFileToS3 = function (key, filePath) {
-  if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
-    key = `${_.get(config, "s3.prefix")}/${key}`;
-  }
-  fs.readFile(filePath, (err, data) => {
-    console.log("params ->", key, filePath, data.length);
-    // Set the parameters.
-    const bucketParams = {
-    Bucket: _.get(config, "s3.bucketName"),
-      // Specify the name of the new object. For example, 'index.html'.
-      // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
-      Key: key,
-      // Content of the new object.
-      Body: data,
-    };
-    const data = await s3Client.send(new PutObjectCommand(bucketParams));
-
-    console.log(
-      "Successfully uploaded object: " +
-        bucketParams.Bucket +
-        "/" +
-        bucketParams.Key
-    );
+  return new Promise((resolve, reject) => {
+    if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
+      key = `${_.get(config, "s3.prefix")}/${key}`;
+    }
+    fs.readFile(filePath, (err, data) => {
+      if (err) throw err;
+      console.log("params ->", key, filePath, data.length);
+      // Set the parameters.
+      const bucketParams = {
+        Bucket: _.get(config, "s3.bucketName"),
+        // Specify the name of the new object. For example, 'index.html'.
+        // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
+        Key: key,
+        // Content of the new object.
+        Body: data,
+      };
+      s3.send(new PutObjectCommand(bucketParams))
+        .then((response) => {
+          console.log(
+            "Successfully uploaded object: " +
+              bucketParams.Bucket +
+              "/" +
+              bucketParams.Key
+          );
+          resolve(response.ETag);
+        })
+        .catch((err) => {
+          reject(new AppError.AppError(JSON.stringify(err)));
+        });
+    });
   });
 };
 
