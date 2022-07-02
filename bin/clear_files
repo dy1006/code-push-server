@@ -1,0 +1,26 @@
+var common = require("../core/utils/common");
+
+async function main() {
+    for (let i = 0; i < 100; i++) {
+        await common
+            .listFilesFromS3("")
+            .then((data) => {
+                data.Contents.forEach(({ Key }) => {
+                    if (Key.substring(0, 4) === "2022") {
+                        common
+                            .deleteFileFromS3(Key)
+                            .then((res) => {
+                                console.log("delete success", Key);
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    }
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+}
+main();

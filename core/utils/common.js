@@ -14,7 +14,11 @@ var jschardet = require("jschardet");
 var log4js = require("log4js");
 var path = require("path");
 var log = log4js.getLogger("cps:utils:common");
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  PutObjectCommand,
+  ListObjectsCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { s3 } = require("./s3Client.js");
 
 module.exports = common;
@@ -491,6 +495,32 @@ common.uploadFileToS3 = function (key, filePath) {
     Body: fileStream,
   };
   return s3.send(new PutObjectCommand(bucketParams));
+};
+
+common.listFilesFromS3 = function (key) {
+  // if (!_.isEmpty(_.get(config, "s3.prefix", ""))) {
+  //   key = `${_.get(config, "s3.prefix")}/${key}`;
+  // }
+  // Set the parameters.
+  const bucketParams = {
+    Bucket: _.get(config, "s3.bucketName"),
+    // Specify the name of the new object. For example, 'index.html'.
+    // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
+    Key: key,
+  };
+  return s3.send(new ListObjectsCommand(bucketParams));
+};
+
+common.deleteFileFromS3 = function (key) {
+  // Set the parameters.
+  const bucketParams = {
+    Bucket: _.get(config, "s3.bucketName"),
+    // Specify the name of the new object. For example, 'index.html'.
+    // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
+    Key: key,
+  };
+  console.log("params ->", bucketParams);
+  return s3.send(new DeleteObjectCommand(bucketParams));
 };
 
 // common.uploadFileToOSS = function (key, filePath) {

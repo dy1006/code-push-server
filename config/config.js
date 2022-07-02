@@ -29,15 +29,41 @@ config.development = {
     downloadUrl: process.env.DOWNLOAD_URL,
   },
   // Config for Amazon s3 (https://aws.amazon.com/cn/s3/) storage when storageType value is "s3".
+  // s3: {
+  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  //   sessionToken: process.env.AWS_SESSION_TOKEN, //(optional)
+  //   bucketName: process.env.BUCKET_NAME,
+  //   prefix: "",
+  //   region: process.env.REGION,
+  //   downloadUrl: process.env.DOWNLOAD_URL, // binary files download host address.
+  // },
+
+  // release
   s3: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    sessionToken: process.env.AWS_SESSION_TOKEN, //(optional)
-    bucketName: process.env.BUCKET_NAME,
-    prefix: "",
-    region: process.env.REGION,
-    downloadUrl: process.env.DOWNLOAD_URL, // binary files download host address.
+    //   accessKeyId: "AKIATS4BS4KMDDIKPRFJ",
+    //   secretAccessKey: "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",
+
+    accessKeyId: "AKIATS4BS4KMEHA55UM6",
+    secretAccessKey: "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",
+    //  sessionToken: process.env.AWS_SESSION_TOKEN, //(optional)
+    prefix: "official",
+    bucketName: "ant-robot",
+    region: "ap-southeast-1",
+    downloadUrl: "https://ant-robot.s3.ap-southeast-1.amazonaws.com/official", // binary files download host address
   },
+
+  // dev
+  // s3: {
+  //   accessKeyId: "AKIATS4BS4KMEHA55UM6",
+  //   secretAccessKey: "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",
+  //   //   sessionToken: process.env.AWS_SESSION_TOKEN, //(optional)
+  //   prefix: "test",
+  //   bucketName: "antbot",
+  //   region: "ap-southeast-1",
+  //   downloadUrl: "https://antbot.s3.ap-southeast-1.amazonaws.com/test", // binary files download host address.
+  // },
+
   // Config for Aliyun OSS (https://www.aliyun.com/product/oss) when storageType value is "oss".
   oss: {
     accessKeyId: "",
